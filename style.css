@@ -90,8 +90,9 @@ svg .a g:nth-of-type(2) use:nth-of-type(5) { transform: rotate(calc(4deg * 180 /
 #boton:hover {
   background-color: #d34076;
 }
-/* DISEÑO RESPONSIVE PARA CELULARES */
-@media (max-width: 768px) {
+
+/* DISEÑO RESPONSIVE PARA CELULARES Y TABLETS */
+@media (max-width: 1024px) {
   
   #svg {
     position: fixed !important;
@@ -101,18 +102,20 @@ svg .a g:nth-of-type(2) use:nth-of-type(5) { transform: rotate(calc(4deg * 180 /
     height: 100vh !important;
     z-index: -1 !important;
   }
+  
   #texto2 {
-    font-size: 13px !important;
-    width: 80% !important;
-    top: 42% !important; 
-    line-height: 1.4 !important;
+    font-size: 14px !important;
+    width: 85% !important;
+    top: 40% !important; 
+    line-height: 1.5 !important;
   }
 
   #texto2 br {
     display: none !important;
   }
+  
   #texto1 {
-    font-size: 22px !important;
+    font-size: 24px !important;
     width: 90% !important;
     top: 65% !important; 
   }
@@ -122,5 +125,42 @@ svg .a g:nth-of-type(2) use:nth-of-type(5) { transform: rotate(calc(4deg * 180 /
     right: 20px !important;
     padding: 10px 18px !important;
     font-size: 14px !important;
+  }
+}
+
+/* DISEÑO RESPONSIVE PARA CELULARES PEQUEÑOS */
+@media (max-width: 480px) {
+  
+  #svg {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: -1 !important;
+  }
+  
+  #texto2 {
+    font-size: 12px !important;
+    width: 90% !important;
+    top: 38% !important; 
+    line-height: 1.3 !important;
+  }
+
+  #texto2 br {
+    display: none !important;
+  }
+  
+  #texto1 {
+    font-size: 20px !important;
+    width: 92% !important;
+    top: 65% !important; 
+  }
+
+  #boton {
+    bottom: 15px !important;
+    right: 15px !important;
+    padding: 8px 16px !important;
+    font-size: 12px !important;
   }
 }
