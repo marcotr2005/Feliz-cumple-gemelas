@@ -137,13 +137,17 @@ function algorithmPoly(gon, R) {
 let points = algorithmPoly(gon, 2500);
 
 let frames = 0;
+let animationSpeed = 1; // Control de velocidad: 1 = normal, 0.5 = más lento
+
 function Frame() {
   rid = window.requestAnimationFrame(Frame);
 
   if (frames >= points.length) {
     window.cancelAnimationFrame(rid);
     rid = null;
+    return;
   }
+  
   m = points[frames];
   let n = 2 + ~~(Math.random() * 4);
   scale = ~~(Math.random() * 12) + 3;
@@ -153,7 +157,9 @@ function Frame() {
     flower.G.setAttribute("class", `_${flower.n}`);
   }, 50);
 
-  frames++;
+  // Controlar la velocidad de la animación
+  frames += animationSpeed;
 }
 
+// Iniciar la animación
 Frame();
