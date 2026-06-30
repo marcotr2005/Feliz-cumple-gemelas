@@ -188,7 +188,7 @@ svg .a g:nth-of-type(2) use:nth-of-type(5) { transform: rotate(calc(4deg * 180 /
   }
 
   #texto2 {
-    font-size: clamp(9px, 3.5vw, 11px); 
+    font-size: clamp(7px, 3.2vw, 8px); 
     line-height: 1.35;
     width: 100%;
     max-width: 100%;
