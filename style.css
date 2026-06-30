@@ -43,7 +43,7 @@ symbol { overflow: visible; }
 
 svg use { transform: rotate(0deg); transition: transform calc(var(--t) * 1s); }
 svg g.a { transition: transform calc(var(--t) * 1s); }
-svg g.a { transform: scale(var(--scale)) rotate(-90deg); filter: url("#f"); }
+svg g.a { transform: scale(var(--scale)) rotate(-90deg); }
 
 ._2 { --n: 2; }
 ._3 { --n: 3; }
