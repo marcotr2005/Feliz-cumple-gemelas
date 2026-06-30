@@ -43,7 +43,7 @@ symbol { overflow: visible; }
 
 svg use { transform: rotate(0deg); transition: transform calc(var(--t) * 1s); }
 svg g.a { transition: transform calc(var(--t) * 1s); }
-svg g.a { transform: scale(var(--scale)) rotate(-90deg); }
+svg g.a { transform: scale(var(--scale)) rotate(-90deg); filter: url("#f");}
 
 ._2 { --n: 2; }
 ._3 { --n: 3; }
@@ -148,7 +148,7 @@ svg .a g:nth-of-type(2) use:nth-of-type(5) { transform: rotate(calc(4deg * 180 /
   }
 
   #texto2 {
-    font-size: clamp(10px, 3vw, 12px); 
+    font-size: clamp(8px, 3vw, 10px); 
     line-height: 1.35;
     width: 100%;
   }
