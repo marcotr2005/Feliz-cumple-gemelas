@@ -1,11 +1,26 @@
-body {
-  --t: .5; 
-  --scale: 3;
-  margin: 0;
-  padding: 0;
+:root {
+  --t: 0.5;
+  --color-rosa: #ba3763;
+  --color-rosa-hover: #d34076;
+  --color-fondo: #e0cae0;
 }
 
-/* Este es el molde oculto, no debemos tocarlo */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: "Times New Roman", Times, serif;
+  background: var(--color-fondo);
+  color: #0e0090;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 svg.root {
   width: 1px;
   height: 1px;
@@ -13,28 +28,27 @@ svg.root {
   left: -100em;
 }
 
-/* El lienzo principal de las flores (Cambio: Usamos #svg) */
 #svg {
+  position: fixed;
+  inset: 0;
   width: 100vw;
-  height: 100vh;
-  background: #e0cae0;
+  height: 100%;
+  background: var(--color-fondo);
   fill-opacity: 0.75;
-  position: fixed; 
-  top: 0;
-  left: 0;
-  z-index: -1;
+  z-index: 0;
+  touch-action: none;
 }
 
 symbol { overflow: visible; }
 
 svg use { transform: rotate(0deg); transition: transform calc(var(--t) * 1s); }
 svg g.a { transition: transform calc(var(--t) * 1s); }
-svg g.a { transform: scale(var(--scale)) rotate(-90deg); filter: url('#f'); }
+svg g.a { transform: scale(var(--scale)) rotate(-90deg); filter: url("#f"); }
 
-._2 { --n : 2; }
-._3 { --n : 3; }
-._4 { --n : 4; }
-._5 { --n : 5; }
+._2 { --n: 2; }
+._3 { --n: 3; }
+._4 { --n: 4; }
+._5 { --n: 5; }
 
 svg .a g:nth-of-type(1) { transform: rotate(calc(-.5 * 180deg / var(--n))); }
 svg .a g:nth-of-type(2) { transform: rotate(calc( .5 * 180deg / var(--n))); }
@@ -49,118 +63,151 @@ svg .a g:nth-of-type(2) use:nth-of-type(3) { transform: rotate(calc(2deg * 180 /
 svg .a g:nth-of-type(2) use:nth-of-type(4) { transform: rotate(calc(3deg * 180 / var(--n))); }
 svg .a g:nth-of-type(2) use:nth-of-type(5) { transform: rotate(calc(4deg * 180 / var(--n))); }
 
+.contenido {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vh, 20px);
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  max-width: 550px;
+  max-height: 70vh;
+  margin: 0 auto;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 #texto1 {
-  position: fixed;
-  top: 65%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 30px;
-  font-weight: bold;
+  width: 100%;
+  font-weight: 800;
   text-align: center;
-  color: rgb(14, 0, 144); 
-  width: 90%; 
+  color: #0e0090;
+  font-size: clamp(14px, 2.8vw, 26px);
+  line-height: 1.2;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #texto2 {
-  position: fixed;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 20px;
-  font-weight: bold;
+  width: 100%;
+  font-weight: 600;
   text-align: center;
-  color: rgba(5, 65, 118, 0.532); 
-  width: 90%; 
+  color: rgba(5, 65, 118, 0.78);
+  font-size: clamp(13px, 2.1vw, 16px);
+  line-height: 1.4;
+  flex-shrink: 1;
 }
 
 #boton {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  padding: 12px 24px;
-  background-color: #ba3763;
+  display: inline-block;
+  padding: 14px 28px;
+  background-color: var(--color-rosa);
   color: white;
   text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: clamp(14px, 2.2vw, 18px);
   transition: background-color 0.3s;
+  z-index: 2;
 }
+#boton:hover { background-color: var(--color-rosa-hover); }
 
-#boton:hover {
-  background-color: #d34076;
-}
-
-/* DISEÑO RESPONSIVE PARA CELULARES Y TABLETS */
-@media (max-width: 1024px) {
-  
-  #svg {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: -1 !important;
-  }
-  
-  #texto2 {
-    font-size: 14px !important;
-    width: 85% !important;
-    top: 40% !important; 
-    line-height: 1.5 !important;
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
-  #texto2 br {
-    display: none !important;
+  .contenido {
+    gap: clamp(8px, 2vh, 16px);
+    padding: 6px 10px;
+    max-width: 55%;
+    width: 65%;
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    justify-content: center;
+    scrollbar-width: none;
   }
-  
+  .contenido::-webkit-scrollbar {
+    display: none;
+  }
+
   #texto1 {
-    font-size: 24px !important;
-    width: 90% !important;
-    top: 65% !important; 
+    font-size: clamp(12px, 3.5vw, 16px); 
+    line-height: 1.2;
+    width: 100%;
+  }
+
+  #texto2 {
+    font-size: clamp(10px, 3vw, 12px); 
+    line-height: 1.35;
+    width: 100%;
+  }
+
+  #texto2 p {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #texto2 p::after {
+    content: " ";
   }
 
   #boton {
-    bottom: 20px !important;
-    right: 20px !important;
-    padding: 10px 18px !important;
-    font-size: 14px !important;
+    bottom: 14px;
+    right: 14px;
+    padding: 10px 18px;
+    font-size: clamp(13px, 3.2vw, 15px);
   }
 }
 
-/* DISEÑO RESPONSIVE PARA CELULARES PEQUEÑOS */
-@media (max-width: 480px) {
-  
-  #svg {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: -1 !important;
-  }
-  
-  #texto2 {
-    font-size: 12px !important;
-    width: 90% !important;
-    top: 38% !important; 
-    line-height: 1.3 !important;
+@media (max-width: 400px) {
+  .contenido {
+    gap: clamp(4px, 1.5vh, 8px); 
+    padding: 5px 8px; 
+    max-width: 65%;
+    width: 65%;
+    max-height: 60vh;
   }
 
-  #texto2 br {
-    display: none !important;
-  }
-  
   #texto1 {
-    font-size: 20px !important;
-    width: 92% !important;
-    top: 65% !important; 
+    font-size: clamp(11px, 4vw, 14px); 
+    line-height: 1.2;
+    width: 100%; 
+    max-width: 100%;
+  }
+
+  #texto2 {
+    font-size: clamp(9px, 3.5vw, 11px); 
+    line-height: 1.35;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #texto2 p {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+
+  #texto2 p::after {
+    content: " ";
   }
 
   #boton {
-    bottom: 15px !important;
-    right: 15px !important;
-    padding: 8px 16px !important;
-    font-size: 12px !important;
+    bottom: 10px;
+    right: 10px;
+    padding: 8px 14px;
+    font-size: clamp(11px, 3.5vw, 13px);
   }
 }
