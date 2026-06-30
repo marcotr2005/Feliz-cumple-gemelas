@@ -1,7 +1,5 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 const SVG_XLINK = "http://www.w3.org/1999/xlink";
-let rid = null;
-let gon = 7;
 
 const colors = [
   "#ba3763",
@@ -14,10 +12,7 @@ const colors = [
   "#e9d8e8"
 ];
 
-let m = { x: 0, y: 0 };
-let previous = { x: 0, y: 0 };
-let scale = 1;
-let bool = false;
+const svg = document.getElementById("svg");
 
 class Flower {
   constructor(n, pos, scale, parent) {
@@ -28,138 +23,147 @@ class Flower {
     this.height = 40;
     this.color = colors[~~(Math.random() * colors.length)];
     this.parent = parent;
-
     this.markup();
   }
 
   markup() {
     this.G = document.createElementNS(SVG_NS, "g");
     this.G.setAttribute("style", `--scale:${this.scale};`);
-    let rot = ~~(Math.random() * 180);
+    const rot = ~~(Math.random() * 180);
     this.G.setAttributeNS(
       null,
       "transform",
       `translate(${this.pos.x},${this.pos.y}) rotate(${rot})`
     );
     this.G.setAttributeNS(null, "fill", this.color);
-    let ga = document.createElementNS(SVG_NS, "g");
+    const ga = document.createElementNS(SVG_NS, "g");
     ga.setAttribute("class", "a");
 
     for (let i = 0; i < 2; i++) {
-      // left, right
-      let g = document.createElementNS(SVG_NS, "g");
+      const g = document.createElementNS(SVG_NS, "g");
       for (let j = 0; j < this.n; j++) {
-        let use = document.createElementNS(SVG_NS, "use");
+        const use = document.createElementNS(SVG_NS, "use");
         use.setAttributeNS(SVG_XLINK, "xlink:href", `#petal${this.n}`);
         use.setAttributeNS(null, "width", this.width);
         use.setAttributeNS(null, "height", this.height);
-
         g.appendChild(use);
       }
       ga.appendChild(g);
     }
     this.G.appendChild(ga);
-
     this.parent.appendChild(this.G);
   }
 }
 
-
-svg.addEventListener("mousedown", e => {
-  // clear the canvas
-  while (svg.lastChild) {
-    svg.removeChild(svg.lastChild);
-  }
-  // if bool == true I can draw
-  bool = true;
-});
-
-svg.addEventListener("mouseup", e => {
-  bool = false;
-  previous = {};
-});
-
-svg.addEventListener("mousemove", e => {
-  if (bool) {
-    m = oMousePosSVG(e);
-    // number of petals
-    let n = 2 + ~~(Math.random() * 4);
-    // set the scale
-    if (previous.x) {
-      let d = dist(m, previous);
-      scale = d / 30;
-    } else {
-      scale = 1;
-    }
-
-    let flower = new Flower(n, { x: m.x, y: m.y }, scale, svg);
-    setTimeout(() => {
-      flower.G.setAttribute("class", `_${flower.n}`);
-    }, 50);
-
-    previous.x = m.x;
-    previous.y = m.y;
-  } //if bool
-});
-
 function oMousePosSVG(e) {
-  var p = svg.createSVGPoint();
-  p.x = e.clientX;
-  p.y = e.clientY;
-  var ctm = svg.getScreenCTM().inverse();
-  var p = p.matrixTransform(ctm);
-  return p;
+  const p = svg.createSVGPoint();
+  const pt = e.touches ? e.touches[0] : e;
+  p.x = pt.clientX;
+  p.y = pt.clientY;
+  const ctm = svg.getScreenCTM().inverse();
+  return p.matrixTransform(ctm);
 }
 
 function dist(p1, p2) {
-  let dx = p2.x - p1.x;
-  let dy = p2.y - p1.y;
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+let drawing = false;
+let lastPos = null;
+let lastScale = 1;
 
+function spawnFlowerAt(pos) {
+  let n = 2 + ~~(Math.random() * 4);
+  let scale = lastScale;
+  if (lastPos) {
+    const d = dist(pos, lastPos);
+    scale = d / 30;
+  }
+  scale = Math.min(Math.max(scale, 0.3), 12);
+
+  const flower = new Flower(n, { x: pos.x, y: pos.y }, scale, svg);
+  setTimeout(() => flower.G.setAttribute("class", `_${flower.n}`), 50);
+
+  lastPos = pos;
+  lastScale = scale;
+}
+
+function clearAndDraw(pos) {
+  while (svg.lastChild) svg.removeChild(svg.lastChild);
+  lastPos = null;
+  spawnFlowerAt(pos);
+}
+
+// Mouse
+svg.addEventListener("mousedown", (e) => {
+  drawing = true;
+  clearAndDraw(oMousePosSVG(e));
+});
+svg.addEventListener("mouseup", () => {
+  drawing = false;
+  lastPos = null;
+});
+svg.addEventListener("mousemove", (e) => {
+  if (drawing) spawnFlowerAt(oMousePosSVG(e));
+});
+
+// Touch
+svg.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  drawing = true;
+  clearAndDraw(oMousePosSVG(e));
+}, { passive: false });
+svg.addEventListener("touchend", () => {
+  drawing = false;
+  lastPos = null;
+});
+svg.addEventListener("touchmove", (e) => {
+  if (!drawing) return;
+  e.preventDefault()
+  spawnFlowerAt(oMousePosSVG(e));
+}, { passive: false });
 
 function algorithmPoly(gon, R) {
-  let points = [];
+  const points = [];
   for (let a = 0; a < 2 * Math.PI; a += 0.1) {
-    let r =
-      R *
-      Math.cos(Math.PI / gon) /
+    const r =
+      (R * Math.cos(Math.PI / gon)) /
       Math.cos(a % (2 * Math.PI / gon) - Math.PI / gon);
-
-    let x = 5000 + r * Math.cos(a);
-    let y = 5000 + r * Math.sin(a);
-    points.push({ x: x, y: y, r: 5 });
+    points.push({
+      x: 5000 + r * Math.cos(a),
+      y: 5000 + r * Math.sin(a)
+    });
   }
   return points;
 }
 
-let points = algorithmPoly(gon, 2500);
+let rid = null;
+let autoFrame = 0;
+const autoPoints = algorithmPoly(7, 2500);
+const totalFrames = autoPoints.length;
 
-let frames = 0;
-let animationSpeed = 1; // Control de velocidad: 1 = normal, 0.5 = más lento
+setTimeout(() => {
+  rid = window.requestAnimationFrame(animationLoop);
+}, 120);
 
-function Frame() {
-  rid = window.requestAnimationFrame(Frame);
-
-  if (frames >= points.length) {
+function animationLoop() {
+  if (autoFrame >= totalFrames) {
     window.cancelAnimationFrame(rid);
     rid = null;
     return;
   }
-  
-  m = points[frames];
-  let n = 2 + ~~(Math.random() * 4);
-  scale = ~~(Math.random() * 12) + 3;
 
-  let flower = new Flower(n, { x: m.x, y: m.y }, scale, svg);
-  setTimeout(() => {
-    flower.G.setAttribute("class", `_${flower.n}`);
-  }, 50);
+  rid = window.requestAnimationFrame(animationLoop);
 
-  // Controlar la velocidad de la animación
-  frames += animationSpeed;
+  for (let k = 0; k < 3; k++) {
+    const m = autoPoints[autoFrame];
+    const n = 2 + ~~(Math.random() * 4);
+    const scale = ~~(Math.random() * 12) + 3;
+    const flower = new Flower(n, { x: m.x, y: m.y }, scale, svg);
+    setTimeout(() => flower.G.setAttribute("class", `_${flower.n}`), 50);
+    autoFrame++;
+    if (autoFrame >= totalFrames) break;
+  }
 }
-
-// Iniciar la animación
-Frame();
