@@ -8,7 +8,7 @@
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   font-family: "Times New Roman", Times, serif;
   background: var(--color-fondo);
@@ -31,7 +31,7 @@ svg.root {
 #svg {
   position: fixed;
   inset: 0;
-  width: 100vw;
+  width: 100dvw;
   height: 100%;
   background: var(--color-fondo);
   fill-opacity: 0.75;
